@@ -1,0 +1,14 @@
+spring:
+  datasource:
+    name: pra_project
+    url: jdbc:p6spy:mysql://localhost:3306/pra_project
+    username: root
+    password: 123456
+    driver-class-name: com.p6spy.engine.spy.P6SpyDriver
+server:
+  port: 8989
+jwt:
+  header: token
+  sign: xxProject
+  expire_time: 3600000
+
