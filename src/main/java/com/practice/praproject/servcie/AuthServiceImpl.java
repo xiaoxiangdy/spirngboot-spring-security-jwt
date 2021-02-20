@@ -29,17 +29,18 @@ public class AuthServiceImpl {
     @Autowired
     JWTUtils jwtUtils;
 
-
     public ResponseUserToken login(String username, String password) {
         //用户验证
         final Authentication authentication = authenticate(username, password);
         //存储认证信息
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        //生成token
+        //获取当前用户
         final UserDetail userDetail = (UserDetail) authentication.getPrincipal();
         String token = "";
         try {
-            token = jwtUtils.createJWT(userDetail.getUsername(),userDetail.getPassword(),"");
+            //生成token
+            token = jwtUtils.createJWT(userDetail.getUsername(),userDetail.getPassword(),userDetail.getRole(),"");
+
         } catch (Exception e) {
             e.printStackTrace();
             throw new CustomException(ResultJson.failure(ResultCode.SERVER_ERROR, e.getMessage()));

@@ -1,7 +1,9 @@
 package com.practice.praproject.jwt;
 
 
+import com.alibaba.fastjson.JSONArray;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
+import com.practice.praproject.pojo.Role;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
@@ -13,10 +15,8 @@ import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
+
 @Component
 public class JWTUtils {
 
@@ -39,7 +39,7 @@ public class JWTUtils {
         return key;
     }
     // 创建jwt
-    public  String createJWT(String username,String userId,String audience) throws Exception {
+    public  String createJWT(String username, String userId, List<Role> roles, String audience) throws Exception {
         // 设置头部信息
 //		Map<String, Object> header = new HashMap<String, Object>();
 //		header.put("typ", "JWT");
@@ -51,6 +51,7 @@ public class JWTUtils {
         Map<String, Object> claims = new HashMap<>();
         claims.put("username", username);
         claims.put("userId",userId);
+        claims.put("roles", JSONArray.toJSONString(roles));
         // jti用户id，例如：20da39f8-b74e-4a9b-9a0f-a39f1f73fe64
         String jwtId = JWT_ID;
         // 生成JWT的时间
@@ -66,7 +67,7 @@ public class JWTUtils {
                 .setIssuedAt(issuedAt) // iat(issuedAt)：jwt的签发时间
                 .setIssuer("xx") // iss(issuer)：jwt签发者
                 .setSubject("all") // sub(subject)：jwt所面向的用户，放登录的用户名，一个json格式的字符串，可存放userid，roldid之类，作为用户的唯一标志
-                .signWith(signatureAlgorithm, key); // 设置签名，使用的是签名算法和签名使用的秘钥
+                .signWith(signatureAlgorithm, key); // 设置签名，使用的是签名算法和签名使用的秘// 钥
         // 设置过期时间
         long expTime = expireTime;
         if (expTime >= 0) {

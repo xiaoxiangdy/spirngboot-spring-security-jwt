@@ -30,9 +30,6 @@ public class CustomUserDetailsServiceImpl implements UserDetailsService {
     public UserDetail loadUserByUsername(String name) throws UsernameNotFoundException {
         User user = userService.queryUser(name);
         UserDetail userDetail = new UserDetail(user.getId(), user.getUsername(), user.getPassword());
-        Role role1 = new Role();
-        role1.setCode("ROLE_ADMIN");
-        userDetail.getRole().add(role1);
         if (userDetail == null) {
             throw new UsernameNotFoundException(String.format("No userDetail found with username '%s'.", name));
         }

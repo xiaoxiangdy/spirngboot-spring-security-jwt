@@ -1,5 +1,6 @@
 package com.practice.praproject.security;
 
+import com.alibaba.fastjson.JSONArray;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.practice.praproject.jwt.JWTUtils;
 import com.practice.praproject.pojo.Role;
@@ -17,6 +18,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
 
 /**
  * 验证请求token拦截器
@@ -36,11 +38,13 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
         }
         String username = null;
         String userId = null;
+        List<Role> roles = null;
         try {
             Claims claims = jwtUtils.parseJWT(authToken);//解析token，从token中拿到用户相关信息
             if (claims != null) {
                 username = (String) claims.get("username");
                 userId = (String) claims.get("id");
+                roles = JSONArray.parseArray((String) claims.get("roles"),Role.class);
             }
             if (StringUtils.isNotBlank(username)){
                 logger.info(String.format("正在检查用户的身份验证 %s",username));
@@ -52,9 +56,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null){
             UserDetail userDetail = new UserDetail(userId, username, "");
-            Role role1 = new Role();
-            role1.setCode("ROLE_ADMIN");
-            userDetail.getRole().add(role1);
+            userDetail.setRole(roles);
             if (!jwtUtils.isExpiration(authToken)){
                 //如果获取到用户，且用户不为空 保存用户对象到SecurityContextHolder
                 UsernamePasswordAuthenticationToken authentication =

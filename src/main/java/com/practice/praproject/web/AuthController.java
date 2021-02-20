@@ -23,7 +23,7 @@ public class AuthController {
         return "hello World";
     }
 
-    @PostMapping
+    @PostMapping("/login")
     public ResultJson<ResponseUserToken> login(@RequestBody User user){
         ResponseUserToken response = authService.login(user.getUsername(), user.getPassword());
         return ResultJson.ok(response);
