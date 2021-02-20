@@ -3,7 +3,7 @@
 
 ## 项目包括：
   * 使用**io.jsonwebtoken**进行token管理。
-    *  如果不适用token，则需要开启csrf，因为spring security会把用户信息保存在session中，然后通过客户端传cookie来锁定sessionId,如http basic auth。
+    *  如果不使用token，则需要开启csrf，因为spring security会把用户信息保存在session中，然后通过客户端传cookie来锁定sessionId,如http basic auth。
   * 基于**spring-security**的角色权限控制，实现根据用户角色来确定对资源的访问权限。
   * 匿名用户访问拦截、用户权限不足等统一异常处理。
   * controller层使用统一返回标准的Json格式数据。
